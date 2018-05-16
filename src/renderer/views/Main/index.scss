@@ -1,0 +1,30 @@
+@import "../../style/utils";
+
+.wrap {
+  text-align: center;
+}
+.progress-wrap {
+  @include horizontalCenter;
+  padding-top: 80px;
+}
+.remain-time-wrap {
+  @include horizontalCenter;
+  font-size: 40px;
+  margin-top: 20px;
+}
+.word {
+  @include horizontalCenter;
+  color: #fff;
+  font-size: 30px;
+}
+.go-to-setting-wrap {
+  @include horizontalCenter;
+  margin-top: 20px;
+}
+//.settingButton {
+//  background-color: #222222 !important;
+//  color: #fff !important;
+//  border: 1px solid #222222 !important;
+//  box-shadow: 0 0px 100px rgba(0,0,0,.3) !important;
+//}
+

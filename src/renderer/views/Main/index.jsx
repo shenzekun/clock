@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import './index.scss';
 import Progress from 'antd/lib/progress'
 import Button from 'antd/lib/button'
-import {connect} from 'react-redux'
 import * as Events from '../../../shared/events'
-import {setWorkTime} from '../../store/setting/action'
 
 const {ipcRenderer} = window.require('electron')
 
@@ -15,22 +13,43 @@ class Main extends Component {
             progress: 0, // 进度条
             workTime: 10, // 工作时间
             breakTime: 6, // 休息时间
-            timeMinute: this.handleTime(10).minute,
-            timeSecond: this.handleTime(10).second,
+            timeMinute: 0,
+            timeSecond: 0,
             isWork: true, // 是否是在工作时间
-            isPlaying: true // 是否是在进行中
+            isPlaying: false // 是否是在进行中
         }
         this.audio = new Audio(require('../../../wav/digital.wav'))
         console.log(this.props)
         this.openSettingWindow = this.openSettingWindow.bind(this);
     }
 
+    componentWillMount() {
+        const _this = this;
+        ipcRenderer.on('workTime', function (event, workTime) {
+            _this.setState({
+                workTime: workTime
+            }, () => {
+                _this.setState({
+                    timeMinute: _this.handleTime(_this.state.workTime).minute,
+                    timeSecond: _this.handleTime(_this.state.workTime).second
+                })
+            })
+        })
+        ipcRenderer.on('breakTime', function (event, breakTime) {
+            console.log(breakTime)
+        })
+        ipcRenderer.on('voiceName', function (event, voiceName) {
+            console.log(voiceName)
+        })
+        ipcRenderer.send('global-setting')
+    }
+
     componentDidMount() {
-        this.interval = setInterval(this.tick, 1000)
+        // this.interval = setInterval(this.tick, 1000)
         if (this.state.isWork) {
-            this.setState({progress: this.handleProgress(this.state.timeMinute, this.state.timeSecond, this.state.workTime)})
+            this.setState({progress: 0})
         } else {
-            this.setState({progress: this.handleProgress(this.state.timeMinute, this.state.timeSecond, this.state.breakTime)})
+            this.setState({progress: 0})
         }
     }
 
@@ -91,7 +110,7 @@ class Main extends Component {
         } else if (parseInt(timeSecond, 10) === 0 && timeMinute >= 0) {
             this.setState({
                 timeMinute: timeMinute - 1,
-                timeSecond: 60,
+                timeSecond: 59,
             }, () => {
                 this.setState({
                     progress: this.state.isWork ? this.handleProgress(this.state.timeMinute, this.state.timeSecond, this.state.workTime) : this.handleProgress(this.state.timeMinute, this.state.timeSecond, this.state.breakTime)
@@ -126,14 +145,6 @@ class Main extends Component {
     openSettingWindow() {
         console.log(this.props)
         ipcRenderer.send(Events.open_settings_window)
-        this.props.setWorkTime(221)
-    }
-
-    componentWillReceiveProps(newProps) {
-        console.log('1')
-        if (this.state.progress === 0) {
-            this.startPlayAudio()
-        }
     }
 
     startPlayAudio() {
@@ -142,6 +153,7 @@ class Main extends Component {
     }
 
     render() {
+        console.log(this.state.progress)
         return (
             <main className="wrap">
                 <div className="progress-wrap">
@@ -164,7 +176,4 @@ class Main extends Component {
     }
 }
 
-export default connect(state => ({
-    breakTime: state.default.breakTime,
-    workTime: state.default.workTime
-}), {setWorkTime})(Main);
+export default Main;

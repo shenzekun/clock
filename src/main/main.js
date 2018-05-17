@@ -3,6 +3,7 @@ const path = require('path')
 const url = require('url')
 const pkg = require('../../package.json')
 const {setAppMenu, setDockMenu} = require('./configs/menu')
+const configuration = require('./configs/configuration');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -13,6 +14,13 @@ let settingWindow = null
 let appIcon = null
 
 function createMainWindow() {
+    if (!configuration.readSettings('workTime')
+        && !configuration.readSettings('breakTime')
+        && !configuration.readSettings('voiceName')) {
+        configuration.saveSettings('workTime', 1500);
+        configuration.saveSettings('breakTime', 600);
+        configuration.saveSettings('voiceName', 'digital')
+    }
     // Create the browser window.
     mainWindow = new BrowserWindow({width: 800, height: 600, titleBarStyle: "hiddenInset"})
 
@@ -33,6 +41,8 @@ function createMainWindow() {
 
     // setAppMenu()
     setDockMenu()
+
+    globalSetting();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', () => {
@@ -87,13 +97,12 @@ app.on('activate', () => {
     }
 })
 
-
 ipcMain.on('open_settings_window', function () {
     if (settingWindow) {
         return
     }
     settingWindow = new BrowserWindow({
-        height: 400,
+        height: 300,
         width: 400,
         titleBarStyle: "hiddenInset",
         resizable: false
@@ -111,7 +120,7 @@ ipcMain.on('open_settings_window', function () {
         }));
     }
     // Open the DevTools.
-    settingWindow.webContents.openDevTools()
+    // settingWindow.webContents.openDevTools()
 
     settingWindow.on('closed', function () {
         settingWindow = null;
@@ -121,7 +130,22 @@ ipcMain.on('open_settings_window', function () {
 ipcMain.on('close_settings_window', function () {
     if (settingWindow) {
         settingWindow.close();
+        mainWindow.reload()
     }
+})
+
+function globalSetting() {
+    console.log('globalSetting')
+    const workTime = configuration.readSettings('workTime');
+    const breakTime = configuration.readSettings('breakTime');
+    const voiceName = configuration.readSettings('voiceName');
+    mainWindow.webContents.send('workTime', workTime);
+    mainWindow.webContents.send('breakTime', breakTime);
+    mainWindow.webContents.send('voiceName', voiceName)
+}
+
+ipcMain.on('global-setting', function () {
+    globalSetting();
 })
 
 

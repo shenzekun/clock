@@ -1,12 +1,20 @@
-const {app, BrowserWindow, Tray, Menu, ipcMain} = require('electron')
+const {
+    app,
+    BrowserWindow,
+    Tray,
+    Menu,
+    ipcMain,
+    ipcRenderer
+} = require('electron')
 const path = require('path')
 const url = require('url')
 const pkg = require('../../package.json')
-const {setAppMenu, setDockMenu} = require('./configs/menu')
+const {
+    setAppMenu,
+    setDockMenu
+} = require('./configs/menu')
 const configuration = require('./configs/configuration');
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow = null
 let settingWindow = null
 
@@ -14,31 +22,34 @@ let settingWindow = null
 let appIcon = null
 
 function createMainWindow() {
-    if (!configuration.readSettings('workTime')
-        && !configuration.readSettings('breakTime')
-        && !configuration.readSettings('voiceName')) {
+    if (!configuration.readSettings('workTime') &&
+        !configuration.readSettings('breakTime') &&
+        !configuration.readSettings('voiceName')) {
         configuration.saveSettings('workTime', 1500);
         configuration.saveSettings('breakTime', 600);
         configuration.saveSettings('voiceName', 'digital')
     }
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 800, height: 600, titleBarStyle: "hiddenInset"})
+    mainWindow = new BrowserWindow({
+        width: 400,
+        height: 600,
+        titleBarStyle: "hiddenInset"
+    })
 
     //判断是否是开发模式
     if (pkg.dev) {
         console.log('开发')
         mainWindow.loadURL("http://localhost:3000/")
+         // Open the DevTools.
+         mainWindow.webContents.openDevTools()
     } else {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, '../../build/index.html'),
             protocol: 'file:',
-            slashes: true
+            slashes: true,
+            resizable: false
         }));
     }
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools()
-
     // setAppMenu()
     setDockMenu()
 
@@ -52,25 +63,19 @@ function createMainWindow() {
         mainWindow = null
     })
     // ipcMain.on('put-in-tray', function (event) {
+    // })
+    //
     const iconName = 'tray-icon.png'
     const iconPath = path.join(__dirname, '../images/' + iconName)
-    // console.log(iconPath)
     appIcon = new Tray(iconPath)
     const contextMenu = Menu.buildFromTemplate([{
-        label: 'Remove',
-        click: function () {
-            // event.sender.send('tray-removed')
-            console.log('ddddd')
+        label: 'quit',
+        click: function (e) {
+            app.quit();
         }
     }])
     appIcon.setToolTip('闹钟提醒')
     appIcon.setContextMenu(contextMenu)
-// })
-//
-// ipcMain.on('remove-tray', function () {
-//     appIcon.destroy()
-// })
-
 }
 
 
@@ -97,6 +102,14 @@ app.on('activate', () => {
     }
 })
 
+ipcMain.on('remove-tray', function () {
+    appIcon.destroy()
+})
+
+ipcMain.on('close_main_window', function () {
+    app.quit();
+});
+
 ipcMain.on('open_settings_window', function () {
     if (settingWindow) {
         return
@@ -111,6 +124,8 @@ ipcMain.on('open_settings_window', function () {
     //判断是否是开发模式
     if (pkg.dev) {
         settingWindow.loadURL("http://localhost:3000/#/setting")
+        // Open the DevTools.
+        settingWindow.webContents.openDevTools()
     } else {
         settingWindow.loadURL(url.format({
             pathname: path.join(__dirname, '../../build/index.html'),
@@ -119,11 +134,10 @@ ipcMain.on('open_settings_window', function () {
             hash: '/setting'
         }));
     }
-    // Open the DevTools.
-    // settingWindow.webContents.openDevTools()
 
     settingWindow.on('closed', function () {
         settingWindow = null;
+        mainWindow.reload()
     });
 })
 
@@ -135,17 +149,14 @@ ipcMain.on('close_settings_window', function () {
 })
 
 function globalSetting() {
-    console.log('globalSetting')
     const workTime = configuration.readSettings('workTime');
     const breakTime = configuration.readSettings('breakTime');
     const voiceName = configuration.readSettings('voiceName');
-    mainWindow.webContents.send('workTime', workTime);
-    mainWindow.webContents.send('breakTime', breakTime);
-    mainWindow.webContents.send('voiceName', voiceName)
+    mainWindow.webContents.send('setting_workTime', workTime);
+    mainWindow.webContents.send('setting_breakTime', breakTime);
+    mainWindow.webContents.send('setting_voiceName', voiceName)
 }
 
 ipcMain.on('global-setting', function () {
     globalSetting();
 })
-
-

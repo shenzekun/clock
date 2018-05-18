@@ -55,6 +55,7 @@ module.exports = {
     // We generate sourcemaps in production. This is slow but gives good results.
     // You can exclude the *.map files from the build during deployment.
     devtool: shouldUseSourceMap ? 'source-map' : false,
+    target: "electron-renderer",
     // In production, we only want to load the polyfills and the app code.
     entry: [require.resolve('./polyfills'), paths.appIndexJs],
     output: {
@@ -216,6 +217,13 @@ module.exports = {
                         test: /\.scss$/,
                         loaders: ['style-loader', 'css-loader', 'sass-loader']
                     },
+                    {
+                        test: /\.wav$/,
+                        loader: require.resolve('file-loader'),
+                        options: {
+                            name: 'static/media/[name].[hash:8].[ext]'
+                        }
+                    },
                     // "file" loader makes sure assets end up in the `build` folder.
                     // When you `import` an asset, you get its filename.
                     // This loader doesn't use a "test" so it will catch all modules
@@ -226,7 +234,7 @@ module.exports = {
                         // it's runtime that would otherwise processed through "file" loader.
                         // Also exclude `html` and `json` extensions so they get processed
                         // by webpacks internal loaders.
-                        exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+                        exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/, /\.wav$/],
                         options: {
                             name: 'static/media/[name].[hash:8].[ext]',
                         },

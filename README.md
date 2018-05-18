@@ -1,2 +1,2 @@
 # clock
-this is a clock notification application base react and electron
+> 这是一个基于 electron 和 react 结合的一款 macos 应用，这个定时时钟的目的其实还是懒🤣，看了市面上的一些定时闹铃的应用发现，每次时间到点的时候就得重新设置时间，觉得好麻烦啊，我想的是能否设置休息和工作时间设置完成之后，比如工作时间到点之后，铃声一响，响完之后，直接自动跳到休息时间，这样就不用在点设置了---- 其实还是懒😏，于是就有了这样一款应用。

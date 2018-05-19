@@ -1,22 +1,17 @@
-const nconf = require('nconf')
-const path = require('path')
-const fs = require('fs')
-
-nconf.argv().env().file({file: 'clock-config.json'})
-// nconf.file({file: getUserHome() + '/clock-config.json'})
-
-// function getUserHome() {
-//     return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-// }
+// const nconf = require('nconf')
+// const path = require('path')
+// const fs = require('fs')
+const store = require('./data');
 
 function saveSettings(settingKey, settingValue) {
-    nconf.set(settingKey, settingValue);
-    nconf.save();
+    // nconf.set(settingKey, settingValue);
+    // nconf.save();
+    store.set(settingKey, settingValue)
 }
 
 function readSettings(settingKey) {
-    nconf.load();
-    return nconf.get(settingKey);
+    // nconf.load();
+    return store.get(settingKey);
 }
 
 module.exports = {

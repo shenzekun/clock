@@ -11,9 +11,9 @@ class Main extends PureComponent {
         super(props);
         this.state = {
             progress: 0, // 进度条
-            workTime: 0, // 工作时间
-            breakTime: 0, // 休息时间
-            voiceName: '',
+            workTime: 1500, // 工作时间
+            breakTime: 300, // 休息时间
+            voiceName: 'melodious',
             timeMinute: 0,
             timeSecond: 0,
             isWork: true, // 是否是在工作时间

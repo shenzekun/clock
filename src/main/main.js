@@ -69,7 +69,7 @@ function createMainWindow() {
     const iconPath = path.join(__dirname, '../images/' + iconName)
     appIcon = new Tray(iconPath)
     const contextMenu = Menu.buildFromTemplate([{
-        label: 'quit',
+        label: 'Quit',
         click: function (e) {
             app.quit();
         }

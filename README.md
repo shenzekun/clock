@@ -24,10 +24,34 @@ yarn
 然后运行
 
 ```bash
+yarn run build
+```
+
+最后运行
+
+```bash
 yarn run package
 ```
 
 然后在你的上级目录会出现一个文件夹，Clock-darwin-x64，里面有个 app，拖到应用程序即可。
+
+---
+
+**注意：如果是在开发运行的话**
+
+先
+
+```bash
+yarn start
+```
+
+然后
+
+```bash
+yarn run electron-start
+```
+
+即可。
 
 ## 截图
 

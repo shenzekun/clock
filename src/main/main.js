@@ -67,17 +67,17 @@ function createMainWindow() {
     // ipcMain.on('put-in-tray', function (event) {
     // })
     //
-    const iconName = 'tray-icon.png'
-    const iconPath = path.join(__dirname, '../images/' + iconName)
-    appIcon = new Tray(iconPath)
-    const contextMenu = Menu.buildFromTemplate([{
-        label: 'Quit',
-        click: function (e) {
-            app.quit();
-        }
-    }])
-    appIcon.setToolTip('闹钟提醒')
-    appIcon.setContextMenu(contextMenu)
+    // const iconName = 'tray-icon.png'
+    // const iconPath = path.join(__dirname, '../images/' + iconName)
+    // appIcon = new Tray(iconPath)
+    // const contextMenu = Menu.buildFromTemplate([{
+    //     label: 'Quit',
+    //     click: function (e) {
+    //         app.quit();
+    //     }
+    // }])
+    // appIcon.setToolTip('闹钟提醒')
+    // appIcon.setContextMenu(contextMenu)
 }
 
 

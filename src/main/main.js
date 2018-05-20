@@ -33,21 +33,22 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: 400,
         height: 600,
-        titleBarStyle: "hiddenInset"
+        titleBarStyle: "hiddenInset",
+        resizable: false,
+        backgroundColor: '#dfe7f1'
     })
 
     //判断是否是开发模式
     if (pkg.dev) {
         console.log('开发')
         mainWindow.loadURL("http://localhost:3000/")
-         // Open the DevTools.
-         mainWindow.webContents.openDevTools()
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools()
     } else {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, '../../build/index.html'),
             protocol: 'file:',
-            slashes: true,
-            resizable: false
+            slashes: true
         }));
     }
     // setAppMenu()
@@ -119,7 +120,8 @@ ipcMain.on('open_settings_window', function () {
         height: 300,
         width: 400,
         titleBarStyle: "hiddenInset",
-        resizable: false
+        resizable: false,
+        backgroundColor: '#dfe7f1'
     })
 
     //判断是否是开发模式
@@ -145,7 +147,6 @@ ipcMain.on('open_settings_window', function () {
 ipcMain.on('close_settings_window', function () {
     if (settingWindow) {
         settingWindow.close();
-        mainWindow.reload()
     }
 })
 

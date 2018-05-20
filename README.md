@@ -5,21 +5,34 @@
 
 打开终端 ，输入：
 
-> cd git@github.com:shenzekun/clock.git
+```bash
+cd git@github.com:shenzekun/clock.git
+```
 
 切换到克隆下来的文件夹：
 
-> cd clock
+```bash
+cd clock
+```
 
 然后输入：
 
-> yarn
+```bash
+yarn
+```
 
 然后运行
 
-> yarn run package
+```bash
+yarn run package
+```
 
 然后在你的上级目录会出现一个文件夹，Clock-darwin-x64，里面有个 app，拖到应用程序即可。
+
+## 截图
+
+![](http://ohggtqwxx.bkt.clouddn.com/2018-05-20-053442.png)
+![](http://ohggtqwxx.bkt.clouddn.com/2018-05-20-053505.png)
 
 ## 推荐electron入门项目
 

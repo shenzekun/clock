@@ -32,7 +32,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "electron-start": "electron .",
-    "package": "electron-packager . Clock --platform=darwin --version=2.0.1 --out=../ --overwrite --ignore=node_modules/electron-* --ignore=node_modules/.bin --ignore=.git --icon=./src/images/icon.icns",
+    "package": "electron-packager . Clock --platform=darwin --version=2.0.1 --out=../ --overwrite --ignore=node_modules/electron-* --ignore=node_modules/.bin --ignore=.git --icon=./src/images/icon.icns --prune",
     "dist": "electron-builder"
   },
   "jest": {

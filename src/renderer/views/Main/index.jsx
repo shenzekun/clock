@@ -106,13 +106,13 @@ class Main extends PureComponent {
             this.startPlayAudio();
             clearInterval(this.interval);
             if (this.state.isWork) {
-                new Notification('工作时间到', {
-                    body: '赶快去工作吧😀'
+                new Notification('休息时间到', {
+                    body: '休息休息😉'
                 });
                 this.setState({ progress: 0 });
             } else {
-                new Notification('休息时间到', {
-                    body: '休息休息😉'
+                new Notification('工作时间到', {
+                    body: '赶快去工作吧😀'
                 });
                 this.setState({ progress: 0 });
             }

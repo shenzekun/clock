@@ -7,6 +7,8 @@ import Button from 'antd/lib/button/';
 const Option = Select.Option;
 const configuration = require('../../../main/configs/configuration');
 
+// const { ipcRenderer } = window.require('electron');
+
 class Setting extends Component {
     constructor(props) {
         super(props);

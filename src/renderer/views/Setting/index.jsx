@@ -56,7 +56,7 @@ class Setting extends Component {
                         style={{ width: 120 }}
                         onChange={this.handleWorkTimeChange}
                     >
-                        <Option value="1200">20分钟</Option>
+                        <Option value="1">20分钟</Option>
                         <Option value="1500">25分钟</Option>
                         <Option value="l800">30分钟</Option>
                         <Option value="2100">35分钟</Option>
@@ -74,7 +74,7 @@ class Setting extends Component {
                         style={{ width: 120 }}
                         onChange={this.handleBreakTimeChange}
                     >
-                        <Option value="60">1分钟</Option>
+                        <Option value="1">1分钟</Option>
                         <Option value="120">2分钟</Option>
                         <Option value="180">3分钟</Option>
                         <Option value="240">4分钟</Option>

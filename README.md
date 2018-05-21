@@ -37,9 +37,9 @@ yarn run package
 
 ---
 
-**注意：如果是在开发运行的话**
+**注意：如果是在开发环境运行的话**
 
-先
+先在 package.json 里将 dev 的值改为 true，然后
 
 ```bash
 yarn start

@@ -83,6 +83,7 @@ class Main extends PureComponent {
                 timeSecond: this.handleTime(breakTime).second
             });
         }
+        this.setState({ isWork: !this.state.isWork });
         this.interval = setInterval(this.tick, 1000);
     };
 
@@ -103,7 +104,7 @@ class Main extends PureComponent {
         const timeSecond = this.state.timeSecond;
         const timeMinute = this.state.timeMinute;
         if (timeMinute === 0 && parseInt(timeSecond, 10) === 0) {
-            this.startPlayAudio();
+            this.audio.play();
             clearInterval(this.interval);
             if (this.state.isWork) {
                 new Notification('休息时间到', {
@@ -116,7 +117,6 @@ class Main extends PureComponent {
                 });
                 this.setState({ progress: 0 });
             }
-            this.setState({ isWork: !this.state.isWork });
             this.audio.addEventListener('ended', this.restart);
         } else if (parseInt(timeSecond, 10) === 0 && timeMinute >= 0) {
             this.setState(
@@ -179,11 +179,6 @@ class Main extends PureComponent {
     
     openSettingWindow() {
         ipcRenderer.send(Events.open_settings_window);
-    }
-
-    startPlayAudio() {
-        this.audio.currentTime = 0;
-        this.audio.play();
     }
 
     render() {

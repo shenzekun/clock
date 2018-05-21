@@ -55,7 +55,7 @@ yarn run electron-start
 
 ## 截图
 
-![](http://ohggtqwxx.bkt.clouddn.com/2018-05-20-053442.png)
+![](http://ohggtqwxx.bkt.clouddn.com/2018-05-21-140836.png)
 ![](http://ohggtqwxx.bkt.clouddn.com/2018-05-20-053505.png)
 
 ## 推荐electron入门项目

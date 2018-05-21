@@ -31,10 +31,7 @@ class Main extends PureComponent {
                     workTime: workTime
                 },
                 () => {
-                    _this.setState({
-                        timeMinute: _this.handleTime(_this.state.workTime).minute,
-                        timeSecond: _this.handleTime(_this.state.workTime).second
-                    });
+                    _this.settingTime(_this.state.workTime);
                 }
             );
         });
@@ -44,49 +41,39 @@ class Main extends PureComponent {
             });
         });
         ipcRenderer.on(Events.setting_voiceName, function(event, voiceName) {
-            _this.setState({
-                voiceName: voiceName
-            },() => {
-                _this.audio.src = require('../../../wav/' + _this.state.voiceName+ '.wav')
-            });
+            _this.setState(
+                {
+                    voiceName: voiceName
+                },
+                () => {
+                    _this.audio.src = require('../../../wav/' + _this.state.voiceName + '.wav');
+                }
+            );
         });
         ipcRenderer.send('global-setting');
     }
 
     componentDidMount() {
-        // this.interval = setInterval(this.tick, 1000)
-        if (this.state.isWork) {
-            this.setState({ progress: 0 });
-        } else {
-            this.setState({ progress: 0 });
-        }
+        this.setState({ progress: 0 });
     }
 
     componentWillUnmount() {
         clearInterval(this.interval);
         this.audio.removeEventListener('ended', this.restart);
     }
-
     // 重新启动
     restart = () => {
+        this.setState({ isWork: !this.state.isWork });
         // 如果是工作时间
         if (this.state.isWork) {
             const workTime = this.state.workTime;
-            this.setState({
-                timeMinute: this.handleTime(workTime).minute,
-                timeSecond: this.handleTime(workTime).second
-            });
+            this.settingTime(workTime);
         } else {
             const breakTime = this.state.breakTime;
-            this.setState({
-                timeMinute: this.handleTime(breakTime).minute,
-                timeSecond: this.handleTime(breakTime).second
-            });
+            this.settingTime(breakTime);
         }
-        this.setState({ isWork: !this.state.isWork });
         this.interval = setInterval(this.tick, 1000);
     };
-
     // 播放音频
     play = () => {
         if (this.state.isPlaying) {
@@ -107,16 +94,15 @@ class Main extends PureComponent {
             this.audio.play();
             clearInterval(this.interval);
             if (this.state.isWork) {
-                new Notification('休息时间到', {
-                    body: '休息休息😉'
+                new Notification('休息时间到~~~~🍿', {
+                    body: '休息休息！😉'
                 });
-                this.setState({ progress: 0 });
             } else {
-                new Notification('工作时间到', {
-                    body: '赶快去工作吧😀'
+                new Notification('工作时间到~~~~🖥', {
+                    body: '赶快去工作吧！😀'
                 });
-                this.setState({ progress: 0 });
             }
+            this.setState({ progress: 0 });
             this.audio.addEventListener('ended', this.restart);
         } else if (parseInt(timeSecond, 10) === 0 && timeMinute >= 0) {
             this.setState(
@@ -124,50 +110,45 @@ class Main extends PureComponent {
                     timeMinute: timeMinute - 1,
                     timeSecond: 59
                 },
-                () => {
-                    this.setState({
-                        progress: this.state.isWork
-                            ? this.handleProgress(
-                                  this.state.timeMinute,
-                                  this.state.timeSecond,
-                                  this.state.workTime
-                              )
-                            : this.handleProgress(
-                                  this.state.timeMinute,
-                                  this.state.timeSecond,
-                                  this.state.breakTime
-                              )
-                    });
-                }
+                this.settingProgress
             );
         } else {
             this.setState(
                 {
                     timeSecond: timeSecond - 1 < 10 ? '0' + (timeSecond - 1) : timeSecond - 1
                 },
-                () => {
-                    this.setState({
-                        progress: this.state.isWork
-                            ? this.handleProgress(
-                                  this.state.timeMinute,
-                                  this.state.timeSecond,
-                                  this.state.workTime
-                              )
-                            : this.handleProgress(
-                                  this.state.timeMinute,
-                                  this.state.timeSecond,
-                                  this.state.breakTime
-                              )
-                    });
-                }
+                this.settingProgress
             );
         }
     };
-
+    // 设置进度条
+    settingProgress = () => {
+        this.setState({
+            progress: this.state.isWork
+                ? this.handleProgress(
+                      this.state.timeMinute,
+                      this.state.timeSecond,
+                      this.state.workTime
+                  )
+                : this.handleProgress(
+                      this.state.timeMinute,
+                      this.state.timeSecond,
+                      this.state.breakTime
+                  )
+        });
+    };
+    // 设置时间
+    settingTime = time => {
+        this.setState({
+            timeMinute: this.handleTime(time).minute,
+            timeSecond: this.handleTime(time).second
+        });
+    };
+    // 处理进度条
     handleProgress(minute, second, totalTime) {
         return Math.floor((1 - (minute * 60 + parseInt(second, 10)) / totalTime) * 100);
     }
-
+    // 处理时间
     handleTime(time) {
         let minute = Math.floor(time / 60);
         let second = time - minute * 60;
@@ -176,7 +157,7 @@ class Main extends PureComponent {
         }
         return { minute, second };
     }
-    
+
     openSettingWindow() {
         ipcRenderer.send(Events.open_settings_window);
     }
@@ -190,7 +171,7 @@ class Main extends PureComponent {
                 <div className="remain-time-wrap">
                     {this.state.timeMinute + ':' + this.state.timeSecond}
                 </div>
-                <div className="word">{this.state.isWork ? 'To Work' : 'To Rest'}</div>
+                <div className="word">{this.state.isWork ? 'Work Time 💻' : 'Break Time 🍔'}</div>
                 <div className="go-to-setting-wrap">
                     <Button
                         icon={this.state.isPlaying ? 'pause' : 'caret-right'}
@@ -198,7 +179,7 @@ class Main extends PureComponent {
                         size="large"
                         type="primary"
                         onClick={this.play}
-                        style={{marginRight: '10px',}}
+                        style={{ marginRight: '10px' }}
                     />
                     <Button
                         icon="setting"
